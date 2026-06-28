@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { heroSchema, type HeroSchemaInput } from "../schemas";
 import { getHero, updateHero } from "../actions";
@@ -16,7 +16,7 @@ export function useHeroForm() {
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<HeroSchemaInput>({
-    resolver: zodResolver(heroSchema) as any,
+    resolver: zodResolver(heroSchema) as unknown as Resolver<HeroSchemaInput>,
     defaultValues: {
       headline: "",
       subHeadline: "",

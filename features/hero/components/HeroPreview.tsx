@@ -1,178 +1,164 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import type { HeroSchemaInput } from "../schemas";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { HeroSection } from "./HeroSection";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  MapPin,
-  FileDown,
-  Mail,
-  Sparkles,
-  Trophy,
-} from "lucide-react";
-import { FaGithub, FaLinkedin, FaInstagram } from "react-icons/fa6";
-import { motion } from "framer-motion";
+import { Monitor, Tablet, Smartphone, Sparkles, RefreshCw } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface HeroPreviewProps {
   values: HeroSchemaInput;
 }
 
+type DeviceMode = "desktop" | "tablet" | "mobile";
+
 export function HeroPreview({ values }: HeroPreviewProps) {
-  const {
-    headline,
-    subHeadline,
-    role,
-    location,
-    availability,
-    yearsExperience,
-    projectCompleted,
-    github,
-    linkedIn,
-    instagram,
-    email,
-    profileImage,
-    cvUrl,
-  } = values;
+  const [deviceMode, setDeviceMode] = useState<DeviceMode>("desktop");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Force a small animation to simulate refresh
+  const triggerRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => setIsRefreshing(false), 500);
+  };
+
+  // Device configuration settings
+  const deviceConfigs = {
+    desktop: {
+      width: 1200,
+      scale: 0.36,
+      height: 750,
+      label: "Desktop View (1200px)",
+      icon: Monitor,
+    },
+    tablet: {
+      width: 768,
+      scale: 0.55,
+      height: 900,
+      label: "Tablet View (768px)",
+      icon: Tablet,
+    },
+    mobile: {
+      width: 375,
+      scale: 1, // Let it adapt or fit
+      height: 600,
+      label: "Mobile View (375px)",
+      icon: Smartphone,
+    },
+  };
+
+  const activeConfig = deviceConfigs[deviceMode];
+
+  // Adjust mobile scale to fit perfectly if container is tight
+  const calculatedMobileScale = "w-full max-w-[375px] mx-auto";
 
   return (
-    <Card className="h-full border-border bg-gradient-to-br from-card via-card/95 to-primary/5 shadow-md overflow-hidden relative group">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-10 group-hover:bg-primary/15 transition-all duration-500" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-violet-500/5 rounded-full blur-3xl -z-10" />
-
-      <CardContent className="p-6 md:p-8 flex flex-col justify-between h-full space-y-8 min-h-[550px]">
-        {/* Header Indicator */}
-        <div className="flex justify-between items-center pb-4 border-b border-border/50">
-          <span className="text-xs font-bold tracking-widest text-muted-foreground uppercase flex items-center gap-1.5">
-            <Sparkles className="h-3 w-3 text-primary animate-pulse" /> Live Portfolio Preview
-          </span>
-          {availability && (
-            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 rounded-full font-semibold px-2.5 py-0.5 text-[11px]">
-              {availability}
-            </Badge>
-          )}
+    <Card className="border-border bg-card/60 backdrop-blur-md shadow-sm overflow-hidden flex flex-col h-full min-h-[680px]">
+      
+      {/* Device Toolbar */}
+      <CardHeader className="flex flex-row items-center justify-between border-b border-border/60 pb-3 p-4">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+          <CardTitle className="text-sm font-bold text-foreground">WYSIWYG Live Preview</CardTitle>
         </div>
 
-        {/* Hero Body */}
-        <div className="flex flex-col items-center text-center md:items-start md:text-left md:flex-row gap-6 my-auto">
-          {/* Profile Image & Avatar */}
-          <motion.div
-            key={profileImage}
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="shrink-0 relative"
+        {/* Device Controls */}
+        <div className="flex items-center gap-1.5 bg-muted/65 p-1 rounded-xl border border-border/40">
+          {(["desktop", "tablet", "mobile"] as DeviceMode[]).map((mode) => {
+            const Icon = deviceConfigs[mode].icon;
+            const isActive = deviceMode === mode;
+            return (
+              <Button
+                key={mode}
+                size="icon"
+                variant={isActive ? "default" : "ghost"}
+                onClick={() => setDeviceMode(mode)}
+                className={`h-7 w-7 rounded-lg transition-all ${
+                  isActive ? "shadow-sm" : "text-muted-foreground hover:text-foreground"
+                }`}
+                title={deviceConfigs[mode].label}
+              >
+                <Icon className="h-4 w-4" />
+              </Button>
+            );
+          })}
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={triggerRefresh}
+            className="h-7 w-7 rounded-lg text-muted-foreground hover:text-foreground"
+            title="Refresh Preview"
           >
-            <div className="absolute -inset-0.5 bg-gradient-to-tr from-primary to-violet-600 rounded-full blur opacity-30 animate-tilt" />
-            <Avatar className="h-28 w-28 md:h-32 md:w-32 border-2 border-background shadow-md">
-              <AvatarImage src={profileImage || undefined} className="object-cover" />
-              <AvatarFallback className="text-xl font-bold bg-muted text-muted-foreground uppercase">
-                {role ? role.substring(0, 2) : "HP"}
-              </AvatarFallback>
-            </Avatar>
-          </motion.div>
-
-          {/* Texts */}
-          <div className="space-y-3 flex-1 min-w-0">
-            <div className="space-y-1">
-              <span className="text-xs font-bold text-primary uppercase tracking-wider block">
-                {role || "YOUR PROFESSIONAL ROLE"}
-              </span>
-              <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground leading-tight truncate">
-                {headline || "Build Something Beautiful"}
-              </h2>
-            </div>
-            <p className="text-sm text-muted-foreground leading-relaxed font-medium line-clamp-3">
-              {subHeadline || "Write a compelling subheadline that captures attention and summarizes your core expertise or mission."}
-            </p>
-
-            {/* Meta Tags */}
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-1 text-xs text-muted-foreground font-semibold">
-              {location && (
-                <span className="flex items-center gap-1">
-                  <MapPin className="h-3.5 w-3.5 text-primary" /> {location}
-                </span>
-              )}
-            </div>
-          </div>
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin text-primary" : ""}`} />
+          </Button>
         </div>
+      </CardHeader>
 
-        {/* Counter Stats Section */}
-        <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-muted/30 border border-border/50">
-          <div className="text-center">
-            <p className="text-2xl md:text-3xl font-black text-foreground">
-              {yearsExperience}+
-            </p>
-            <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">
-              Years Experience
-            </p>
-          </div>
-          <div className="text-center border-l border-border/60">
-            <p className="text-2xl md:text-3xl font-black text-foreground flex items-center justify-center gap-1">
-              <Trophy className="h-5 w-5 text-amber-500 shrink-0 hidden sm:inline" />
-              {projectCompleted}+
-            </p>
-            <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">
-              Projects Completed
-            </p>
-          </div>
-        </div>
-
-        {/* Actions & Social Links */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-border/50">
-          {/* CV Action */}
-          {cvUrl ? (
-            <Button
-              variant="default"
-              size="sm"
-              className="rounded-xl w-full sm:w-auto font-semibold gap-1.5 bg-gradient-to-r from-primary to-primary/95 text-primary-foreground shadow-sm shadow-primary/10"
-              asChild
+      {/* Browser Mockup Wrapper */}
+      <CardContent className="p-6 flex-1 flex items-center justify-center bg-muted/20 overflow-hidden relative">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={deviceMode}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.25 }}
+            className="w-full flex items-center justify-center"
+          >
+            {/* The Browser Window mockup */}
+            <div
+              className={`rounded-2xl border border-border/80 bg-background shadow-2xl overflow-hidden flex flex-col transition-all duration-300 ${
+                deviceMode === "mobile" ? calculatedMobileScale : ""
+              }`}
+              style={
+                deviceMode !== "mobile"
+                  ? {
+                      width: `${activeConfig.width}px`,
+                      height: `${activeConfig.height}px`,
+                      transform: `scale(${activeConfig.scale})`,
+                      transformOrigin: "center center",
+                      flexShrink: 0,
+                    }
+                  : {
+                      height: `${activeConfig.height}px`,
+                    }
+              }
             >
-              <a href={cvUrl} target="_blank" rel="noopener noreferrer">
-                <FileDown className="h-4 w-4" /> Download CV
-              </a>
-            </Button>
-          ) : (
-            <Button variant="outline" size="sm" className="rounded-xl w-full sm:w-auto font-semibold gap-1.5 opacity-60 cursor-not-allowed">
-              <FileDown className="h-4 w-4" /> No CV Attached
-            </Button>
-          )}
+              {/* Browser Window Header */}
+              <div className="bg-muted border-b border-border/80 px-4 py-2.5 flex items-center gap-3 shrink-0">
+                {/* Traffic lights */}
+                <div className="flex gap-1.5">
+                  <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+                  <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                  <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                </div>
+                {/* Mock Address Bar */}
+                <div className="flex-1 bg-card border border-border/60 rounded-lg text-[10px] text-muted-foreground/80 py-1 text-center font-medium max-w-sm mx-auto shadow-inner truncate px-3">
+                  hanaprakasita.com
+                </div>
+              </div>
 
-          {/* Socials */}
-          <div className="flex items-center gap-2">
-            {email && (
-              <Button size="icon" variant="ghost" className="h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10" asChild>
-                <a href={`mailto:${email}`} title="Email">
-                  <Mail className="h-4.5 w-4.5" />
-                </a>
-              </Button>
-            )}
-            {github && (
-              <Button size="icon" variant="ghost" className="h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10" asChild>
-                <a href={github} target="_blank" rel="noopener noreferrer" title="Github">
-                  <FaGithub className="h-4.5 w-4.5" />
-                </a>
-              </Button>
-            )}
-            {linkedIn && (
-              <Button size="icon" variant="ghost" className="h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10" asChild>
-                <a href={linkedIn} target="_blank" rel="noopener noreferrer" title="LinkedIn">
-                  <FaLinkedin className="h-4.5 w-4.5" />
-                </a>
-              </Button>
-            )}
-            {instagram && (
-              <Button size="icon" variant="ghost" className="h-9 w-9 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10" asChild>
-                <a href={instagram} target="_blank" rel="noopener noreferrer" title="Instagram">
-                  <FaInstagram className="h-4.5 w-4.5" />
-                </a>
-              </Button>
-            )}
-          </div>
-        </div>
+              {/* Iframe-like Web Canvas */}
+              <div className="flex-1 overflow-y-auto overflow-x-hidden relative bg-background">
+                <HeroSection
+                  data={values}
+                  name="Hana Prakasita"
+                  className={deviceMode === "mobile" ? "py-10" : ""}
+                />
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </CardContent>
+
+      {/* Footer Info */}
+      <div className="px-4 py-2 border-t border-border/50 text-[10px] text-muted-foreground font-semibold flex justify-between bg-card/40">
+        <span>Active viewport: {activeConfig.label}</span>
+        <span>Status: Synced</span>
+      </div>
+
     </Card>
   );
 }
