@@ -123,7 +123,7 @@ export function useSkillsForm() {
         }, 2000);
       } else {
         setSaveStatus("error");
-        const err = res.error || "Failed to save skill";
+        const err = ("error" in res ? (res as { error?: string }).error : null) || "Failed to save skill";
         setErrorMessage(err);
         toast.error(err);
       }
@@ -140,7 +140,8 @@ export function useSkillsForm() {
         setDeleteId(null);
         await refreshSkills();
       } else {
-        toast.error(res.error || "Failed to delete skill");
+        const err = ("error" in res ? (res as { error?: string }).error : null) || "Failed to delete skill";
+        toast.error(err);
       }
     });
   };
@@ -155,7 +156,8 @@ export function useSkillsForm() {
 
     const res = await updateSkillsOrder(idOrders);
     if (!res.success) {
-      toast.error(res.error || "Failed to save new sorting order");
+      const err = ("error" in res ? (res as { error?: string }).error : null) || "Failed to save new sorting order";
+      toast.error(err);
       await refreshSkills();
     }
   };

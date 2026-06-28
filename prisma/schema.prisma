@@ -64,9 +64,11 @@ model Project {
   thumbnail   String?
   github      String?
   demo        String?
+  figma       String?
   techStack   String?
   featured    Boolean       @default(false)
   status      ProjectStatus @default(DRAFT)
+  gallery     String[]      @default([])
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 }

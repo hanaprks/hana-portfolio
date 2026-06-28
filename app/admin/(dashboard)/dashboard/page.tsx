@@ -62,7 +62,7 @@ export default async function DashboardPage() {
             title="Projects"
             value={projects.length}
             icon={FolderKanban}
-            description="Total portfolio project dibuat"
+            description={`Published: ${projects.filter(p => p.status === "PUBLISHED").length} | Draft: ${projects.filter(p => p.status === "DRAFT").length} | Featured: ${projects.filter(p => p.featured).length}`}
           />
         </AnimatedContainer>
         <AnimatedContainer delay={0.15}>
