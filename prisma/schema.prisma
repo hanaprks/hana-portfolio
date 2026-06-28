@@ -57,20 +57,33 @@ model Skill {
 }
 
 model Project {
-  id          String        @id @default(cuid())
-  title       String
-  slug        String        @unique
-  description String
-  thumbnail   String?
-  github      String?
-  demo        String?
-  figma       String?
-  techStack   String?
-  featured    Boolean       @default(false)
-  status      ProjectStatus @default(DRAFT)
-  gallery     String[]      @default([])
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id                  String        @id @default(cuid())
+  title               String
+  slug                String        @unique
+  description         String
+  thumbnail           String?
+  github              String?
+  demo                String?
+  figma               String?
+  techStack           String?
+  featured            Boolean       @default(false)
+  status              ProjectStatus @default(DRAFT)
+  gallery             String[]      @default([])
+  problemStatement    String?
+  datasetDescription  String?
+  methodology         String?
+  dataCleaning        String?
+  exploratoryAnalysis String?
+  featureEngineering  String?
+  visualizationProcess String?
+  dashboardScreenshot String?
+  modelDevelopment    String?
+  evaluation          String?
+  businessInsight     String?
+  recommendation      String?
+  conclusion          String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
 }
 
 model Contact {

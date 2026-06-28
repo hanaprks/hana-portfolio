@@ -55,7 +55,6 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
   const [tagInput, setTagInput] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Watch form values for real-time live preview
   const watchedValues = form.watch();
 
   // UploadThing helper for gallery images
@@ -130,8 +129,8 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
         {/* Left Side: Form */}
         <form onSubmit={onSubmit} className="xl:col-span-7 space-y-6">
           <SectionCard
-            title="Project Information"
-            description="Details about your project engineering scope, stack and repository links."
+            title="Project Editor"
+            description="Manage core specifications, visual resources, analytics narrative, and dashboards."
             action={
               <Button
                 type="button"
@@ -146,16 +145,16 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
           >
             <div className="space-y-8">
               
-              {/* Basic Section */}
+              {/* Section 1: Basic Information */}
               <FormSection
                 title="Basic Metadata"
-                description="Core naming and URL parameters."
+                description="Core naming, path parameters, and brief summaries."
               >
                 <div className="space-y-2">
                   <Label htmlFor="title" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Title *</Label>
                   <Input
                     id="title"
-                    placeholder="e.g. E-Commerce Platform"
+                    placeholder="e.g. Churn Prediction Engine"
                     {...form.register("title")}
                     className="rounded-xl bg-card border-border"
                   />
@@ -170,7 +169,7 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                   <Label htmlFor="slug" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Slug (URL Path) *</Label>
                   <Input
                     id="slug"
-                    placeholder="e.g. e-commerce-platform"
+                    placeholder="e.g. churn-prediction-engine"
                     {...form.register("slug")}
                     className="rounded-xl bg-card border-border"
                   />
@@ -182,12 +181,12 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                 </div>
 
                 <div className="col-span-1 md:col-span-2 space-y-2">
-                  <Label htmlFor="description" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Description *</Label>
+                  <Label htmlFor="description" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Project Summary *</Label>
                   <Textarea
                     id="description"
-                    placeholder="Provide a description of the project, features, challenges, and goals..."
+                    placeholder="Briefly describe the project, core technologies, and main achievements..."
                     {...form.register("description")}
-                    className="rounded-xl bg-card border-border min-h-[120px] resize-y"
+                    className="rounded-xl bg-card border-border min-h-[100px] resize-y"
                   />
                   {form.formState.errors.description && (
                     <p className="text-xs text-destructive font-semibold mt-1">
@@ -197,10 +196,10 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                 </div>
               </FormSection>
 
-              {/* Status and Visibility Settings */}
+              {/* Status and Featured Settings */}
               <FormSection
                 title="Visibility & Status"
-                description="Status categorization and featured settings."
+                description="Project display configurations."
               >
                 <div className="space-y-2">
                   <Label htmlFor="status" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Status</Label>
@@ -218,7 +217,7 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                 <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-muted/20">
                   <div className="space-y-0.5">
                     <Label htmlFor="featured" className="font-bold text-sm text-foreground cursor-pointer">Featured Project</Label>
-                    <p className="text-xs text-muted-foreground font-medium">Pin this project at the top of your homepage.</p>
+                    <p className="text-xs text-muted-foreground font-medium">Promote this project at the top of your homepage.</p>
                   </div>
                   <input
                     type="checkbox"
@@ -229,24 +228,19 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                 </div>
               </FormSection>
 
-              {/* Link settings */}
+              {/* Technical Details & Links */}
               <FormSection
-                title="Project Links"
-                description="Repository and demo URLs."
+                title="Technical Scope & Links"
+                description="Assign source repositories, live presentations, and figma canvas URLs."
               >
                 <div className="space-y-2">
                   <Label htmlFor="github" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">GitHub URL</Label>
                   <Input
                     id="github"
-                    placeholder="https://github.com/username/project"
+                    placeholder="https://github.com/username/repo"
                     {...form.register("github")}
                     className="rounded-xl bg-card border-border"
                   />
-                  {form.formState.errors.github && (
-                    <p className="text-xs text-destructive font-semibold mt-1">
-                      {form.formState.errors.github.message}
-                    </p>
-                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -257,39 +251,24 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                     {...form.register("demo")}
                     className="rounded-xl bg-card border-border"
                   />
-                  {form.formState.errors.demo && (
-                    <p className="text-xs text-destructive font-semibold mt-1">
-                      {form.formState.errors.demo.message}
-                    </p>
-                  )}
                 </div>
 
                 <div className="col-span-1 md:col-span-2 space-y-2">
-                  <Label htmlFor="figma" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Figma board URL</Label>
+                  <Label htmlFor="figma" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Figma Canvas URL</Label>
                   <Input
                     id="figma"
                     placeholder="https://figma.com/file/..."
                     {...form.register("figma")}
                     className="rounded-xl bg-card border-border"
                   />
-                  {form.formState.errors.figma && (
-                    <p className="text-xs text-destructive font-semibold mt-1">
-                      {form.formState.errors.figma.message}
-                    </p>
-                  )}
                 </div>
-              </FormSection>
 
-              {/* Tech Stack Chip Input */}
-              <FormSection
-                title="Tech Stack"
-                description="Tags representing the technologies used."
-              >
-                <div className="col-span-1 md:col-span-2 space-y-3">
-                  <Label className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Technologies</Label>
+                {/* Tech Stack Chips */}
+                <div className="col-span-1 md:col-span-2 space-y-3 pt-2">
+                  <Label className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Tech Stack Tags</Label>
                   <div className="flex gap-2">
                     <Input
-                      placeholder="Type a technology (e.g. Next.js) and press Enter"
+                      placeholder="Type a technology (e.g. Python) and press Enter"
                       value={tagInput}
                       onChange={(e) => setTagInput(e.target.value)}
                       onKeyDown={(e) => {
@@ -318,7 +297,6 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                     </Button>
                   </div>
 
-                  {/* Chips Container */}
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {tags.map((tag, idx) => (
                       <span
@@ -329,7 +307,7 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                         <button
                           type="button"
                           onClick={() => removeTag(idx)}
-                          className="hover:text-destructive transition"
+                          className="hover:text-destructive transition animate-none"
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -342,12 +320,168 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                 </div>
               </FormSection>
 
+              {/* Section 2: Analysis Story (Long text narrative) */}
+              <FormSection
+                title="Analysis Story: Narrative Foundations"
+                description="Detail the business context, datasets, and pipelines."
+              >
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Label htmlFor="problemStatement" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Problem Statement</Label>
+                  <Textarea
+                    id="problemStatement"
+                    placeholder="Describe the research, business challenge or operational bottleneck..."
+                    {...form.register("problemStatement")}
+                    className="rounded-xl bg-card border-border min-h-[100px] resize-y"
+                  />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Label htmlFor="datasetDescription" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Dataset Description</Label>
+                  <Textarea
+                    id="datasetDescription"
+                    placeholder="Specify data collection sources, shapes, distributions, and feature counts..."
+                    {...form.register("datasetDescription")}
+                    className="rounded-xl bg-card border-border min-h-[80px] resize-y"
+                  />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Label htmlFor="methodology" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Analytics Methodology</Label>
+                  <Textarea
+                    id="methodology"
+                    placeholder="Methodological scope, modeling packages, and analytical workflow charts..."
+                    {...form.register("methodology")}
+                    className="rounded-xl bg-card border-border min-h-[80px] resize-y"
+                  />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Label htmlFor="dataCleaning" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Data Cleaning & Wrangling</Label>
+                  <Textarea
+                    id="dataCleaning"
+                    placeholder="Null value handling, outlier detection, distribution corrections..."
+                    {...form.register("dataCleaning")}
+                    className="rounded-xl bg-card border-border min-h-[80px] resize-y"
+                  />
+                </div>
+              </FormSection>
+
+              <FormSection
+                title="Analysis Story: Modeling & Deep Insights"
+                description="Describe the EDA findings, ML model setup, and evaluations."
+              >
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Label htmlFor="exploratoryAnalysis" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Exploratory Data Analysis (EDA)</Label>
+                  <Textarea
+                    id="exploratoryAnalysis"
+                    placeholder="Discoveries made during univariate / multivariate distributions, correlations, etc..."
+                    {...form.register("exploratoryAnalysis")}
+                    className="rounded-xl bg-card border-border min-h-[100px] resize-y"
+                  />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Label htmlFor="featureEngineering" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Feature Engineering</Label>
+                  <Textarea
+                    id="featureEngineering"
+                    placeholder="Scalers, hot-encodings, dimension reduction techniques..."
+                    {...form.register("featureEngineering")}
+                    className="rounded-xl bg-card border-border min-h-[80px] resize-y"
+                  />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Label htmlFor="visualizationProcess" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Visualization Process</Label>
+                  <Textarea
+                    id="visualizationProcess"
+                    placeholder="How charts were designed, dashboard layouts, tools (Looker Studio, Tableau)..."
+                    {...form.register("visualizationProcess")}
+                    className="rounded-xl bg-card border-border min-h-[80px] resize-y"
+                  />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Label htmlFor="modelDevelopment" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Model Development & Tuning</Label>
+                  <Textarea
+                    id="modelDevelopment"
+                    placeholder="Trained algorithms (XGBoost, Random Forest), hyperparameter choices..."
+                    {...form.register("modelDevelopment")}
+                    className="rounded-xl bg-card border-border min-h-[80px] resize-y"
+                  />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Label htmlFor="evaluation" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Evaluation & Metrics Validation</Label>
+                  <Textarea
+                    id="evaluation"
+                    placeholder="Confusion matrices, ROC AUC curves, accuracy, F1-scores..."
+                    {...form.register("evaluation")}
+                    className="rounded-xl bg-card border-border min-h-[80px] resize-y"
+                  />
+                </div>
+              </FormSection>
+
+              <FormSection
+                title="Analysis Story: Actionable Outputs"
+                description="List final business recommendations, ROI gains, and conclusions."
+              >
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Label htmlFor="businessInsight" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Business Insights & Impact</Label>
+                  <Textarea
+                    id="businessInsight"
+                    placeholder="What recommendations did data point to? Operational optimizations..."
+                    {...form.register("businessInsight")}
+                    className="rounded-xl bg-card border-border min-h-[100px] resize-y"
+                  />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Label htmlFor="recommendation" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Operational Recommendations</Label>
+                  <Textarea
+                    id="recommendation"
+                    placeholder="List key operational steps or policy implementations suggested..."
+                    {...form.register("recommendation")}
+                    className="rounded-xl bg-card border-border min-h-[80px] resize-y"
+                  />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Label htmlFor="conclusion" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Project Conclusion</Label>
+                  <Textarea
+                    id="conclusion"
+                    placeholder="Final take-away summary, project wrap-up..."
+                    {...form.register("conclusion")}
+                    className="rounded-xl bg-card border-border min-h-[100px] resize-y"
+                  />
+                </div>
+              </FormSection>
+
+              {/* Section 3: Dashboard Preview (Screenshot upload) */}
+              <FormSection
+                title="Dashboard Embed"
+                description="Provide an upload screenshot of interactive reports."
+              >
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <Controller
+                    name="dashboardScreenshot"
+                    control={form.control}
+                    render={({ field }) => (
+                      <ImageUploader
+                        value={field.value}
+                        onChange={field.onChange}
+                        label="Dashboard Screenshot Embed"
+                        description="Power BI / Tableau / Excel report export. PNG, JPG up to 4MB"
+                      />
+                    )}
+                  />
+                </div>
+              </FormSection>
+
               {/* Media Uploads */}
               <FormSection
-                title="Project Media"
-                description="Upload the main thumbnail and supplementary gallery images."
+                title="Visual Media: Primary & Gallery Screenshots"
+                description="Attach the cover thumbnail and multiple gallery preview images."
               >
-                {/* Thumbnail image uploader */}
                 <div className="col-span-1 md:col-span-2 space-y-2">
                   <Controller
                     name="thumbnail"
@@ -356,18 +490,18 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                       <ImageUploader
                         value={field.value}
                         onChange={field.onChange}
-                        label="Project Thumbnail"
+                        label="Project Card Thumbnail"
                         description="PNG, JPG, JPEG up to 4MB"
                       />
                     )}
                   />
                 </div>
 
-                {/* Multiple image gallery uploader */}
+                {/* Gallery screenshots */}
                 <div className="col-span-1 md:col-span-2 space-y-4 pt-4 border-t border-border/60">
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="font-bold text-sm text-foreground">Project Gallery</Label>
+                      <Label className="font-bold text-sm text-foreground">Project Screenshot Gallery</Label>
                       <p className="text-xs text-muted-foreground mt-0.5">Attach multiple screenshot images to the project.</p>
                     </div>
 
@@ -396,7 +530,6 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                     </Button>
                   </div>
 
-                  {/* Gallery Items Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     {gallery.map((url, idx) => (
                       <div
@@ -404,7 +537,6 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                         className="relative flex items-center justify-between p-3.5 rounded-2xl border border-border bg-card/60"
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          {/* Thumbnail preview */}
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={url}
@@ -416,7 +548,6 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
                           </span>
                         </div>
 
-                        {/* Order & Delete buttons */}
                         <div className="flex items-center gap-1">
                           <Button
                             type="button"
@@ -477,7 +608,6 @@ export function ProjectEditor({ project, onCancel, onSuccess }: ProjectEditorPro
         </div>
       </div>
 
-      {/* Unsaved changes prompt */}
       <ConfirmLeaveDialog isDirty={isDirty} />
     </div>
   );

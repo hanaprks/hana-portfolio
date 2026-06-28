@@ -37,6 +37,20 @@ export function useProjectForm({ project, onSuccess }: UseProjectFormProps) {
       featured: false,
       status: "DRAFT",
       gallery: [],
+      
+      problemStatement: "",
+      datasetDescription: "",
+      methodology: "",
+      dataCleaning: "",
+      exploratoryAnalysis: "",
+      featureEngineering: "",
+      visualizationProcess: "",
+      dashboardScreenshot: "",
+      modelDevelopment: "",
+      evaluation: "",
+      businessInsight: "",
+      recommendation: "",
+      conclusion: "",
     },
   });
 
@@ -54,6 +68,20 @@ export function useProjectForm({ project, onSuccess }: UseProjectFormProps) {
         featured: project.featured ?? false,
         status: project.status || "DRAFT",
         gallery: project.gallery || [],
+        
+        problemStatement: project.problemStatement || "",
+        datasetDescription: project.datasetDescription || "",
+        methodology: project.methodology || "",
+        dataCleaning: project.dataCleaning || "",
+        exploratoryAnalysis: project.exploratoryAnalysis || "",
+        featureEngineering: project.featureEngineering || "",
+        visualizationProcess: project.visualizationProcess || "",
+        dashboardScreenshot: project.dashboardScreenshot || "",
+        modelDevelopment: project.modelDevelopment || "",
+        evaluation: project.evaluation || "",
+        businessInsight: project.businessInsight || "",
+        recommendation: project.recommendation || "",
+        conclusion: project.conclusion || "",
       });
       if (project.techStack) {
         setTags(project.techStack.split(",").map((t) => t.trim()).filter(Boolean));
@@ -74,6 +102,20 @@ export function useProjectForm({ project, onSuccess }: UseProjectFormProps) {
         featured: false,
         status: "DRAFT",
         gallery: [],
+        
+        problemStatement: "",
+        datasetDescription: "",
+        methodology: "",
+        dataCleaning: "",
+        exploratoryAnalysis: "",
+        featureEngineering: "",
+        visualizationProcess: "",
+        dashboardScreenshot: "",
+        modelDevelopment: "",
+        evaluation: "",
+        businessInsight: "",
+        recommendation: "",
+        conclusion: "",
       });
       setTags([]);
       setGallery([]);
@@ -154,7 +196,7 @@ export function useProjectForm({ project, onSuccess }: UseProjectFormProps) {
         setTimeout(() => setSaveStatus("idle"), 2500);
       } else {
         setSaveStatus("error");
-        const err = res.error || "Failed to save project settings";
+        const err = ("error" in res ? (res as { error?: string }).error : null) || "Failed to save project settings";
         setErrorMessage(err);
         toast.error(err);
       }

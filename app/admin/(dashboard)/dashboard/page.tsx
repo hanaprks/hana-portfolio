@@ -24,7 +24,7 @@ export default async function DashboardPage() {
   const session = await auth();
   const userName = session?.user?.name || "Hana Prakasita";
 
-  // Fetch real data from Services (Database Layer)
+  // Fetch real data from Services
   const projects = await getProjects();
   const skills = await getSkills();
   const hero = await getHero();
@@ -34,7 +34,7 @@ export default async function DashboardPage() {
     dateStyle: "full",
   }).format(new Date());
 
-  const recentProjects = projects.slice(0, 3);
+  const recentProjects = projects.slice(0, 4);
 
   return (
     <PageContainer>
@@ -62,7 +62,7 @@ export default async function DashboardPage() {
             title="Projects"
             value={projects.length}
             icon={FolderKanban}
-            description={`Published: ${projects.filter(p => p.status === "PUBLISHED").length} | Draft: ${projects.filter(p => p.status === "DRAFT").length} | Featured: ${projects.filter(p => p.featured).length}`}
+            description={`Published: ${projects.filter((p) => p.status === "PUBLISHED").length} | Draft: ${projects.filter((p) => p.status === "DRAFT").length} | Featured: ${projects.filter((p) => p.featured).length}`}
           />
         </AnimatedContainer>
         <AnimatedContainer delay={0.15}>
