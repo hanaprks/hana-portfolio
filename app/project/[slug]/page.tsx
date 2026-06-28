@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import type { Metadata } from "next";
 import {
   ArrowLeft,
   Calendar,
@@ -22,6 +23,47 @@ import Link from "next/link";
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: ProjectPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const project = await prisma.project.findUnique({
+    where: { slug },
+  });
+
+  if (!project) {
+    return {
+      title: "Project Not Found",
+    };
+  }
+
+  const title = `${project.title} - Hana Prakasita`;
+  const description = project.description.slice(0, 160);
+  const baseUrl = process.env.NEXTAUTH_URL || "https://hanaprakasita.com";
+  const url = `${baseUrl}/project/${project.slug}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "article",
+      images: project.thumbnail ? [{ url: project.thumbnail }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: project.thumbnail ? [project.thumbnail] : [],
+    },
+  };
 }
 
 export default async function ProjectDetailPage({ params }: ProjectPageProps) {
@@ -96,8 +138,28 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
     { label: "Project Conclusion", id: "conclusion", active: !!project.conclusion },
   ].filter((item) => item.active);
 
+  const baseUrl = process.env.NEXTAUTH_URL || "https://hanaprakasita.com";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": project.title,
+    "description": project.description,
+    "image": project.thumbnail || "",
+    "datePublished": project.createdAt.toISOString(),
+    "dateModified": project.updatedAt.toISOString(),
+    "author": {
+      "@type": "Person",
+      "name": "Hana Prakasita Kustanto",
+      "url": baseUrl,
+    },
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans select-none antialiased selection:bg-primary/10 selection:text-primary">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       
       {/* Top mini header bar */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/40 py-4">
@@ -162,7 +224,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
           </aside>
 
           {/* Right Column: Narrative Content Body */}
-          <main className="lg:col-span-9 space-y-12">
+          <main id="main-content" className="lg:col-span-9 space-y-12">
             
             {/* Article Metadata */}
             <div className="flex flex-wrap items-center gap-4 text-xs font-mono font-bold text-muted-foreground border-b border-border/40 pb-5">
