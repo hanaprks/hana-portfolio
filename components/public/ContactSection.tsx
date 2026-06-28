@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 interface ContactData {
   email: string;
@@ -48,25 +49,37 @@ export default function ContactSection({ data }: ContactSectionProps) {
   };
 
   return (
-    <section id="contact" className="py-20 md:py-28 bg-muted/10 border-t border-border/40">
+    <section id="contact" className="py-24 md:py-32 bg-muted/10 border-t border-border/40 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 md:px-12 space-y-12">
         
         {/* Header */}
-        <div className="text-left space-y-3 max-w-xl">
-          <span className="text-xs font-bold uppercase tracking-widest text-primary font-mono">Get in Touch</span>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-foreground">
-            Contact Channels
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-left space-y-3 max-w-2xl"
+        >
+          <span className="text-xs font-bold uppercase tracking-widest text-primary font-mono">[ Contact ]</span>
+          <h2 className="text-4xl md:text-6xl font-black tracking-tight text-foreground uppercase leading-[1.05]">
+            Let&apos;s Build Something Meaningful Together.
           </h2>
           <p className="text-sm md:text-base text-muted-foreground font-medium">
-            Have a project or want to collaborate? Drop a message or reach out on my channels.
+            Have a project, operational bottleneck, or dashboard showcase requirement? Reach out on my channels.
           </p>
-        </div>
+        </motion.div>
 
         {/* Layout split */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pt-4">
           
           {/* Left Column: Direct channels */}
-          <div className="lg:col-span-5 space-y-8">
+          <motion.div
+            initial={{ opacity: 0, x: -25 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 space-y-8 text-left"
+          >
             <div className="space-y-6">
               
               {/* Email channel */}
@@ -116,7 +129,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div className="space-y-1">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80 font-mono">Office Address</h4>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80 font-mono">Office Location</h4>
                     <p className="text-sm font-bold text-foreground">
                       {contactAddress}
                     </p>
@@ -125,11 +138,17 @@ export default function ContactSection({ data }: ContactSectionProps) {
               )}
 
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Contact form */}
-          <form onSubmit={handleSubmit} className="lg:col-span-7 p-6 md:p-8 rounded-3xl border border-border bg-card/65 shadow-sm space-y-5">
-            
+          <motion.form
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            onSubmit={handleSubmit}
+            className="lg:col-span-7 p-6 md:p-8 rounded-[32px] border border-border bg-card/65 shadow-sm space-y-5"
+          >
             <div className="space-y-2">
               <Label htmlFor="name" className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Full Name</Label>
               <Input
@@ -167,7 +186,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
             <Button
               type="submit"
               disabled={isSending}
-              className="w-full rounded-xl font-bold text-sm gap-2 shadow-md animate-none"
+              className="w-full rounded-xl font-bold text-xs uppercase tracking-wider gap-2 py-6 shadow-md transition-all hover:translate-y-[-2px] duration-300 animate-none"
             >
               {isSending ? (
                 <>
@@ -179,7 +198,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
                 </>
               )}
             </Button>
-          </form>
+          </motion.form>
 
         </div>
 

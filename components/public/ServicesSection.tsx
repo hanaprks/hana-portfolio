@@ -2,6 +2,7 @@
 
 import React from "react";
 import { LineChart, BrainCircuit, Database, Lightbulb, ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 const SERVICES = [
   {
@@ -34,30 +35,62 @@ const SERVICES = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { y: 25, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
 export default function ServicesSection() {
   return (
-    <section id="services" className="py-20 md:py-28 bg-muted/10 border-y border-border/40">
+    <section id="services" className="py-24 md:py-32 bg-muted/10 border-y border-border/40 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 md:px-12 space-y-12">
         
         {/* Header */}
-        <div className="text-left space-y-3 max-w-xl">
-          <span className="text-xs font-bold uppercase tracking-widest text-primary font-mono">Offered Services</span>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-foreground">
-            Core Competencies
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-left space-y-3 max-w-xl"
+        >
+          <span className="text-xs font-bold uppercase tracking-widest text-primary font-mono">[ Services ]</span>
+          <h2 className="text-4xl md:text-6xl font-black tracking-tight text-foreground uppercase">
+            Services & Value
           </h2>
           <p className="text-sm md:text-base text-muted-foreground font-medium">
             Helping teams model operations, design metrics, and convert raw database pipelines into strategic decisions.
           </p>
-        </div>
+        </motion.div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4"
+        >
           {SERVICES.map((srv, idx) => {
             const Icon = srv.icon;
             return (
-              <div
+              <motion.div
                 key={idx}
-                className="p-6 md:p-8 rounded-3xl border border-border bg-card/70 flex flex-col justify-between hover:border-primary/20 hover:scale-[1.01] transition-all duration-300 shadow-sm"
+                variants={cardVariants}
+                className="p-6 md:p-8 rounded-[32px] border border-border bg-card/75 flex flex-col justify-between hover:border-primary/20 hover:translate-y-[-2px] transition-all duration-300 shadow-sm"
               >
                 <div className="space-y-4">
                   {/* Icon & Title */}
@@ -74,7 +107,7 @@ export default function ServicesSection() {
                 </div>
 
                 {/* Tags */}
-                <div className="flex flex-wrap gap-1.5 pt-6 mt-4 border-t border-border/40">
+                <div className="flex flex-wrap gap-1.5 pt-6 mt-6 border-t border-border/40">
                   {srv.tags.map((tag) => (
                     <span
                       key={tag}
@@ -84,10 +117,10 @@ export default function ServicesSection() {
                     </span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
       </div>
     </section>

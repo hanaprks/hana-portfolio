@@ -20,16 +20,33 @@ interface DashboardShowcaseProps {
   projects: DashboardProject[];
 }
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { y: 25, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
 export default function DashboardShowcase({ projects }: DashboardShowcaseProps) {
   const [filterTool, setFilterTool] = useState<"all" | "power-bi" | "tableau" | "looker-studio" | "excel">("all");
   const [activeScreenshotUrl, setActiveScreenshotUrl] = useState<string | null>(null);
   const [activeProjectTitle, setActiveProjectTitle] = useState("");
   const [activeProjectSlug, setActiveProjectSlug] = useState("");
 
-  // Filter projects that have dashboard screenshots
   const dashboardProjects = projects.filter((p) => p.dashboardScreenshot);
 
-  // Filter by selected tool
   const filteredProjects = dashboardProjects.filter((p) => {
     if (filterTool === "all") return true;
     const stack = p.techStack?.toLowerCase() || "";
@@ -58,14 +75,14 @@ export default function DashboardShowcase({ projects }: DashboardShowcaseProps) 
   };
 
   return (
-    <section id="dashboards" className="py-20 md:py-28 bg-muted/10 border-y border-border/40">
+    <section id="dashboards" className="py-24 md:py-32 bg-muted/10 border-y border-border/40 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 md:px-12 space-y-12">
         
         {/* Header toolbar */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border/50 pb-6">
           <div className="text-left space-y-3 max-w-xl">
-            <span className="text-xs font-bold uppercase tracking-widest text-primary font-mono">BI Showcase Gallery</span>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight text-foreground">
+            <span className="text-xs font-bold uppercase tracking-widest text-primary font-mono">[ Dashboards ]</span>
+            <h2 className="text-4xl md:text-6xl font-black tracking-tight text-foreground uppercase leading-[1.05]">
               Dashboard Showcase
             </h2>
             <p className="text-sm md:text-base text-muted-foreground font-medium">
@@ -74,7 +91,7 @@ export default function DashboardShowcase({ projects }: DashboardShowcaseProps) 
           </div>
 
           {/* Tools filters */}
-          <div className="flex flex-wrap items-center gap-1.5 bg-muted/60 p-1.5 rounded-2xl border border-border/40 shrink-0">
+          <div className="flex flex-wrap items-center gap-1.5 bg-muted/60 p-1.5 rounded-2xl border border-border/40 shrink-0 self-start md:self-auto">
             {(["all", "power-bi", "tableau", "looker-studio", "excel"] as const).map((tool) => (
               <button
                 key={tool}
@@ -93,85 +110,95 @@ export default function DashboardShowcase({ projects }: DashboardShowcaseProps) 
         </div>
 
         {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
-          {filteredProjects.map((project) => {
-            const tools = getToolsUsed(project.techStack);
-            return (
-              <div
-                key={project.id}
-                className="group relative flex flex-col p-4 rounded-3xl border border-border bg-card/65 hover:border-primary/15 transition-all duration-300 shadow-sm"
-              >
-                {/* Visual Screenshot Embed */}
-                <div
-                  onClick={() =>
-                    handleOpenLightbox(project.dashboardScreenshot!, project.title, project.slug)
-                  }
-                  className="relative aspect-video rounded-2xl border border-border/80 bg-muted/20 overflow-hidden cursor-pointer group/img bg-card"
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4"
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.map((project) => {
+              const tools = getToolsUsed(project.techStack);
+              return (
+                <motion.div
+                  key={project.id}
+                  variants={cardVariants}
+                  layout
+                  className="group relative flex flex-col p-4 rounded-[32px] border border-border bg-card/65 hover:border-primary/15 transition-all duration-300 shadow-sm"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={project.dashboardScreenshot!}
-                    alt={`Dashboard ${project.title}`}
-                    className="w-full h-full object-cover group-hover/img:scale-103 transition duration-500"
-                  />
-                  <div className="absolute inset-0 bg-black/10 opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity">
-                    <Maximize2 className="h-5 w-5 text-white" />
-                  </div>
-                </div>
-
-                {/* Dashboard Meta */}
-                <div className="pt-4 flex-1 flex flex-col justify-between space-y-3">
-                  <div className="space-y-1">
-                    <h3 className="font-extrabold text-sm text-foreground truncate" title={project.title}>
-                      {project.title}
-                    </h3>
-                    <p className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground/80 font-mono">
-                      Interactive Dashboard Report
-                    </p>
+                  {/* Visual Screenshot Embed */}
+                  <div
+                    onClick={() =>
+                      handleOpenLightbox(project.dashboardScreenshot!, project.title, project.slug)
+                    }
+                    className="relative aspect-video rounded-2xl border border-border/80 bg-muted/20 overflow-hidden cursor-pointer group/img bg-card"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={project.dashboardScreenshot!}
+                      alt={`Dashboard ${project.title}`}
+                      className="w-full h-full object-cover group-hover/img:scale-103 transition duration-500"
+                    />
+                    <div className="absolute inset-0 bg-black/10 opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity">
+                      <Maximize2 className="h-5 w-5 text-white" />
+                    </div>
                   </div>
 
-                  {/* Tool Badges */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border/50">
-                    <div className="flex flex-wrap gap-1">
-                      {tools.map((t) => (
-                        <Badge
-                          key={t}
-                          variant="secondary"
-                          className="text-[9px] font-bold tracking-wide rounded-md px-1.5 py-0.5"
-                        >
-                          {t}
-                        </Badge>
-                      ))}
-                      {tools.length === 0 && (
-                        <span className="text-[10px] text-muted-foreground/60 italic font-semibold">
-                          General BI Tool
-                        </span>
-                      )}
+                  {/* Dashboard Meta */}
+                  <div className="pt-4 flex-1 flex flex-col justify-between space-y-3">
+                    <div className="space-y-1">
+                      <h3 className="font-extrabold text-sm text-foreground truncate" title={project.title}>
+                        {project.title}
+                      </h3>
+                      <p className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground/80 font-mono">
+                        Interactive Dashboard Report
+                      </p>
                     </div>
 
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-7 rounded-lg text-[10px] font-bold gap-1 px-2 text-primary hover:bg-primary/5"
-                      asChild
-                    >
-                      <Link href={`/project/${project.slug}`}>
-                        Case Study <ExternalLink className="h-3 w-3" />
-                      </Link>
-                    </Button>
+                    {/* Tool Badges */}
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border/50">
+                      <div className="flex flex-wrap gap-1">
+                        {tools.map((t) => (
+                          <Badge
+                            key={t}
+                            variant="secondary"
+                            className="text-[9px] font-bold tracking-wide rounded-md px-1.5 py-0.5"
+                          >
+                            {t}
+                          </Badge>
+                        ))}
+                        {tools.length === 0 && (
+                          <span className="text-[10px] text-muted-foreground/60 italic font-semibold">
+                            General BI Tool
+                          </span>
+                        )}
+                      </div>
+
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-7 rounded-lg text-[10px] font-bold gap-1 px-2 text-primary hover:bg-primary/5"
+                        asChild
+                      >
+                        <Link href={`/project/${project.slug}`}>
+                          Case Study <ExternalLink className="h-3 w-3" />
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
-                </div>
 
-              </div>
-            );
-          })}
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </motion.div>
 
-          {filteredProjects.length === 0 && (
-            <p className="col-span-1 md:col-span-3 text-center text-sm text-muted-foreground italic py-12">
-              No dashboards match this category filter.
-            </p>
-          )}
-        </div>
+        {filteredProjects.length === 0 && (
+          <p className="text-center text-sm text-muted-foreground italic py-12">
+            No dashboards match this category filter.
+          </p>
+        )}
 
       </div>
 
