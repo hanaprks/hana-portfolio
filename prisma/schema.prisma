@@ -28,6 +28,10 @@ model Hero {
   location         String?
   yearsExperience  Int      @default(0)
   projectCompleted Int      @default(0)
+  github           String?
+  linkedIn         String?
+  instagram        String?
+  email            String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }
